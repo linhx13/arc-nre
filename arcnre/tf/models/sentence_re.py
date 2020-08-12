@@ -8,7 +8,7 @@ from ..layers import CNNEncoder
 
 
 def CNNModel(features: Dict[str, Field],
-             targets: Dict[str, Fielf],
+             targets: Dict[str, Field],
              text_embedder,
              filters: int = 150,
              kernel_sizes: Iterable[int] = (2, 3, 4, 5),
@@ -20,10 +20,10 @@ def CNNModel(features: Dict[str, Field],
     inputs = utils.create_inputs(features)
     embedded_token = text_embedder(inputs['token'])
 
-    pos_head_embedding = tf.keras.layers.Embedding(len(features['pos_head'].vocab),
-                                                   50, mask_zero=True)
-    pos_tail_embedding = tf.keras.layers.Embedding(len(features['pos_tail'].vocab),
-                                                   50, mask_zero=True)
+    pos_head_embedding = tf.keras.layers.Embedding(
+        features['pos_head'].max_len * 2, 50, mask_zero=True)
+    pos_tail_embedding = tf.keras.layers.Embedding(
+        features['pos_tail'].max_len * 2, 50, mask_zero=True)
     embedded_pos_head = pos_head_embedding(inputs['pos_head'])
     embedded_pos_tail = pos_tail_embedding(inputs['pos_tail'])
     x = tf.keras.layers.Concatenate()([embedded_token, embedded_pos_head, embedded_pos_tail])

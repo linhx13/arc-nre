@@ -136,7 +136,7 @@ class PositionField(Field):
     def encode(self, tokens, target):
         pos_target_idx = min(target['pos'][0], self.max_len)
         pos = []
-        for i in range(tokens):
+        for i in range(len(tokens)):
             pos.append(min(i - pos_target_idx + self.max_len, 2 * self.max_len - 1))
         return pos
 
